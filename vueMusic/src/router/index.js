@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import recommend from 'components/recommend/recommend'
-import rank from 'components/rank/rank'
-import search from 'components/search/search'
+import recommend from 'src/components/recommend/recommend'
+import rank from 'src/components/rank/rank'
+import search from 'src/components/search/search'
 
 Vue.use(Router)
 
