@@ -5,7 +5,7 @@
         </slot>
       </div>
       <div class="dots">
-        <span class="dot"></span>
+        <span class="dot" v-for='(item,index) in dots' :class="{active:currentIndex === index}"></span>
       </div>
     </div>
 </template>
@@ -14,7 +14,8 @@
   export default{
     data(){
       return{
-
+        dots: [],
+        currentIndex:0
       }
     },
     props:{
@@ -35,7 +36,8 @@
       setTimeout(()=>{
         this.setSliderWidth();
         this.initBScroll();
-      },50)
+        this.initDots();
+      },500)
     },
     methods:{
       setSliderWidth(){
@@ -52,6 +54,10 @@
         }
         this.$refs.sliderGroup.style.width = width + 'px'
       },
+      initDots(){
+        console.log(this.children.length);
+        this.dots = new Array(this.children.length);
+      },
       initBScroll(){
         this.slider = new BScroll(this.$refs.slider, {
           scrollX: true,
@@ -60,7 +66,11 @@
           snap: true,
           snapLoop: this.loop,
           snapThreshold: 0.3,
-          snapSpeed: 400
+          snapSpeed: 400,
+          click:true
+        });
+        this.slider.on('scrollEnd',()=>{
+          this.currentIndex = this.slider.getCurrentPage().pageX;
         })
       }
     }
@@ -99,9 +109,9 @@
           width: 8px
           height: 8px
           border-radius: 50%
-          // background: $color-text-l
+          background: rgba(255, 255, 255, 0.5)
           &.active
             width: 20px
             border-radius: 5px
-            // background: $color-text-ll
+            background:rgba(255, 255, 255, 0.8)
 </style>
