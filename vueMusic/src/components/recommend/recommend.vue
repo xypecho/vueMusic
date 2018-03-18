@@ -17,7 +17,7 @@
     </div>
 </template>
 <script>
-import {getRecommend} from 'api/recommend';
+import {getRecommend,getDiscList} from 'api/recommend';
 import {ERR_OK} from 'api/config';
 import slider from 'src/base/slider/slider'
 export default{
@@ -30,7 +30,8 @@ export default{
     slider
   },
   created(){
-    this.getslider();
+    // this.getslider();
+    this.getmusicList();
   },
   methods:{
     getslider(){
@@ -38,6 +39,11 @@ export default{
           if (res.code === ERR_OK) {
               this.recommends=res.data;
           }
+      })
+    },
+    getmusicList(){
+      getDiscList().then((res) => {
+        console.log(res);
       })
     }
   }
