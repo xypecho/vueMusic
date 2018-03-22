@@ -3,6 +3,9 @@
 		<router-link tag='div' to='/recommend' class='tab_item'>
 			<span class="tab_link">推荐</span>
 		</router-link>
+		<router-link tag='div' to='/singer' class='tab_item'>
+			<span class="tab_link">歌手</span>
+		</router-link>
 		<router-link tag='div' to='/rank' class='tab_item'>
 			<span class="tab_link">排行榜</span>
 		</router-link>

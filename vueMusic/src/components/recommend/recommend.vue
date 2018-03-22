@@ -11,15 +11,27 @@
             </slider> 
           </div>
         </div>
+        <div class="clear"></div>
         <div class="bottom">
-          
+          <p>电台</p>
+          <div class="father">
+            <div v-for='item in recommends.radioList' class="child">
+              <a href="javascript:;" style="text-decoration: none">
+                <img :src="item.picUrl" style="width:98%">
+                <p style="color: #ccc">{{item.Ftitle}}</p>
+              </a>
+            </div>
+          </div>
         </div>
     </div>
 </template>
 <script>
-import {getRecommend,getDiscList} from 'api/recommend';
+import {getRecommend,getTopList,getSongList} from 'api/recommend';
 import {ERR_OK} from 'api/config';
-import slider from 'src/base/slider/slider'
+import slider from 'src/base/slider/slider';
+import axios from 'axios';
+import jsonp from 'jsonp';
+
 export default{
   data(){
     return{
@@ -30,8 +42,8 @@ export default{
     slider
   },
   created(){
-    // this.getslider();
-    this.getmusicList();
+    this.getslider();
+    // this.getTopList();
   },
   methods:{
     getslider(){
@@ -41,8 +53,8 @@ export default{
           }
       })
     },
-    getmusicList(){
-      getDiscList().then((res) => {
+    getTopList() {
+      getSongList().then((res) =>{
         console.log(res);
       })
     }
@@ -69,4 +81,16 @@ export default{
           img
             display: block
             width: 100%
+    .clear
+      clear both
+    .bottom
+      overflow hidden
+      padding 20px
+      padding-top 160px
+      -webkit-tap-highlight-color rgba(0,0,0,0)
+      .father
+        display flex
+        .child
+          flex 1
+          text-align center
 </style>

@@ -11,19 +11,40 @@ export function getRecommend() {
 	})
 	return jsonp(url,data,options)
 }
-
-export function getDiscList(){
-	const url ='https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
-	const data = Object.assign({},commonParam,{
-		platform: 'yqq',
+export function getSongList(){
+	const url ='https://u.y.qq.com/cgi-bin/musicu.fcg';
+	const data = {
+		// callback: recom36907488756300766
+		g_tk: 5381,
+		// jsonpCallback: recom36907488756300766
+		loginUin: 0,
 		hostUin: 0,
-		sin: 0,
-		ein: 29,
-		sortId: 5,
-		needNewCode: 0,
-		categoryId: 10000000,
-		rnd: Math.random(),
-		format: 'json'
-	})
-	return jsonp(url,data,options)
+		format: 'jsonp',
+		inCharset: 'utf8',
+		outCharset: 'utf-8',
+		notice: 0,
+		platform: 'yqq',
+		needNewCode: 0
+	};
+	return jsonp(url,data,options);
+}
+export function getTopList() {
+	const url = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg';
+	const data = {
+		channel: 'singer',
+		page: 'list',
+		key: 'all_all_all',
+		pagesize: 100,
+		pagenum: 1,
+		g_tk: 5381,
+		loginUin: 0,
+		hostUin: 0,
+		format: 'jsonp',
+		inCharset: 'utf8',
+		outCharset: 'utf-8',
+		notice: 0,
+		platform: 'yqq',
+		needNewCode: 0
+	}
+	return jsonp(url,data,options);
 }

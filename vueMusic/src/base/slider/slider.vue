@@ -55,7 +55,6 @@
         this.$refs.sliderGroup.style.width = width + 'px'
       },
       initDots(){
-        console.log(this.children.length);
         this.dots = new Array(this.children.length);
       },
       initBScroll(){
