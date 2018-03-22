@@ -1,6 +1,8 @@
 # vuemusic
 
 > 用vue仿写QQ音乐
+## 前言
+线上[预览地址](https://xypecho.github.io/vueMusic)
 
 ## 项目运行
 
