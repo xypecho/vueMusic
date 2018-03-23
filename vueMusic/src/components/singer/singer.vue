@@ -6,26 +6,34 @@
           <h2 class="list-group-title">{{group.title}}</h2>
           <uL>
             <li v-for="item in group.items" class="list-group-item">
-              <img class="avatar" :src='item.avater'>
+              <img class="avatar" v-lazy='item.avater'>
               <span class="name">{{item.name}}</span>
             </li>
           </uL>
         </li>
       </ul>
     </div>
+    <div class="load-wrapper" v-show='!singers.length'>
+      <loading :title='title'></loading>
+    </div>
   </div>
 </template>
 <script>
   import {getTopList} from 'api/recommend';
   import betterScroll from 'better-scroll';
+  import loading from 'src/components/loading/loading';
 
   const HOT_LINE = 10;
   const HOT_NAME = '热门';
   export default{
     data(){
       return{
-        singers:[]
+        singers:[],
+        title: '歌手列表正在加载...'
       }
+    },
+    components:{
+      loading
     },
     mounted() {
       this.$nextTick(() => {
@@ -78,8 +86,9 @@
           RET.sort((a,b) =>{
             return a.title.charCodeAt(0) - b.title.charCodeAt(0);
           });
-          this.singers = HOT.concat(RET);
-          console.log(this.singers);
+          setTimeout(() => {
+            this.singers = HOT.concat(RET);
+          },5000);
         })
       }
     }
@@ -107,5 +116,28 @@
             padding-left: 20px;
             font-size: 12px;
             background #31c27c;
-            // background: #333;
+            color: #fff
+          .list-group-item
+            height 50px
+            line-height 50px
+            margin-bottom 20px
+            padding-left 20px
+            .avatar
+              width:50px;
+              height: 50px;
+              border-radius: 50%
+              display:inline-block
+            .name
+              height 50px
+              line-height 50px
+              margin-left: 20px;
+              color: #ccc;
+              font-size: 14px;
+              display:inline-block
+              vertical-align top
+    .load-wrapper
+      position absolute
+      top:50%
+      transform:translateY(-50%)
+      width 100%
 </style>
