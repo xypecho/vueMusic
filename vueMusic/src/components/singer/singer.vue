@@ -1,11 +1,11 @@
 <template>
   <div class="singer">
     <div class="wrapper" ref='wrapper'>
-      <ul>
+      <ul @scroll='scroll'>
         <li v-for="group in singers" class="list-group" ref="listGroup">
           <h2 class="list-group-title">{{group.title}}</h2>
           <uL>
-            <li v-for="item in group.items" class="list-group-item">
+            <li v-for="item in group.items" class="list-group-item" @click='select(item)'>
               <img class="avatar" v-lazy='item.avater'>
               <span class="name">{{item.name}}</span>
             </li>
@@ -13,13 +13,20 @@
         </li>
       </ul>
     </div>
+    <div class="shortCut" @touchstart.stop.prevent="onTouchStart">
+      <ul>
+        <li v-for='(item, index) in singers' :data-index='index'>{{ item.title | formatterTitle }}</li>
+      </ul>
+    </div>
     <div class="load-wrapper" v-show='!singers.length'>
       <loading :title='title'></loading>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 <script>
   import {getTopList} from 'api/recommend';
+  import {getData} from 'src/common/js/dom';
   import betterScroll from 'better-scroll';
   import loading from 'src/components/loading/loading';
 
@@ -30,6 +37,11 @@
       return{
         singers:[],
         title: '歌手列表正在加载...'
+      }
+    },
+    filters: {
+      formatterTitle(val){
+        return val.substring(0,1);
       }
     },
     components:{
@@ -44,6 +56,11 @@
       this.getSingerList();
     },
     methods:{
+      select(item){
+        this.$router.push({
+          path:`/singer/${item.id}`
+        });
+      },
       getSingerList(){
         let singer_list = {
           hot:{
@@ -86,10 +103,17 @@
           RET.sort((a,b) =>{
             return a.title.charCodeAt(0) - b.title.charCodeAt(0);
           });
-          setTimeout(() => {
-            this.singers = HOT.concat(RET);
-          },5000);
+          this.singers = HOT.concat(RET);
+          // console.log(this.singers);
         })
+      },
+      onTouchStart(e){
+        let idx = getData(e.target, 'index');
+        this.scroll.scrollToElement(this.$refs.listGroup[idx], 2000); //后面的参数代表滚动时间
+      },
+      scroll(e){
+        alert(123);
+        console.log(e);
       }
     }
   }
@@ -140,4 +164,26 @@
       top:50%
       transform:translateY(-50%)
       width 100%
+    .shortCut
+      position absolute
+      width 20px
+      background rgba(0,0,0,0.3)
+      z-index 99
+      right 50%
+      top 50%
+      transform translateY(-50%)
+      right 8px
+      text-align center
+      border-radius 20px
+      ul
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 14px;
+        font-weight: normal;
+        vertical-align: baseline;
+        li
+          list-style none
+          padding:3px 0
+          color rgba(255,255,255,0.5)
 </style>
