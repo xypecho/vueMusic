@@ -4,6 +4,7 @@ import App from './App'
 import router from './router'
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
+import store from './store'
 
 Vue.use(VueLazyload, {
 	loading:require('common/image/timg.jpg')
@@ -16,5 +17,6 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App)
 })
