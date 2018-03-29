@@ -2,7 +2,7 @@
   <div class="singer">
     <div class="wrapper" ref='wrapper'>
       <ul @scroll='scroll'>
-        <li v-for="group in singers" class="list-group" ref="listGroup">
+        <li v-for="group in singer" class="list-group" ref="listGroup">
           <h2 class="list-group-title">{{group.title}}</h2>
           <uL>
             <li v-for="item in group.items" class="list-group-item" @click='select(item)'>
@@ -15,10 +15,10 @@
     </div>
     <div class="shortCut" @touchstart.stop.prevent="onTouchStart">
       <ul>
-        <li v-for='(item, index) in singers' :data-index='index'>{{ item.title | formatterTitle }}</li>
+        <li v-for='(item, index) in singer' :data-index='index'>{{ item.title | formatterTitle }}</li>
       </ul>
     </div>
-    <div class="load-wrapper" v-show='!singers.length'>
+    <div class="load-wrapper" v-show='!singer.length'>
       <loading :title='title'></loading>
     </div>
     <router-view></router-view>
@@ -29,13 +29,14 @@
   import {getData} from 'src/common/js/dom';
   import betterScroll from 'better-scroll';
   import loading from 'src/components/loading/loading';
+  import {mapMutations} from 'vuex'
 
   const HOT_LINE = 10;
   const HOT_NAME = '热门';
   export default{
     data(){
       return{
-        singers:[],
+        singer:[],
         title: '歌手列表正在加载...'
       }
     },
@@ -56,10 +57,11 @@
       this.getSingerList();
     },
     methods:{
-      select(item){
+      select(singer){
         this.$router.push({
-          path:`/singer/${item.id}`
+          path:`/singer/${singer.id}`
         });
+        this.setSinger(singer);
       },
       getSingerList(){
         let singer_list = {
@@ -103,8 +105,7 @@
           RET.sort((a,b) =>{
             return a.title.charCodeAt(0) - b.title.charCodeAt(0);
           });
-          this.singers = HOT.concat(RET);
-          // console.log(this.singers);
+          this.singer = HOT.concat(RET);
         })
       },
       onTouchStart(e){
@@ -114,7 +115,10 @@
       scroll(e){
         alert(123);
         console.log(e);
-      }
+      },
+      ...mapMutations({
+        setSinger:'SET_SINGER'
+      })
     }
   }
 </script>
