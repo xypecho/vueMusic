@@ -5,6 +5,8 @@ import router from './router'
 import fastclick from 'fastclick'
 import VueLazyload from 'vue-lazyload'
 import store from './store'
+import './common/stylus/index.styl'
+
 
 Vue.use(VueLazyload, {
 	loading:require('common/image/timg.jpg')

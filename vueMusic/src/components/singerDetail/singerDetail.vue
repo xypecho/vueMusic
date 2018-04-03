@@ -1,7 +1,8 @@
 <template>
   <transition name='slider'>
     <div class="singerDetail">
-      
+      <musicList :avater='singer.avater' :title='singer.name' :songList='song'>
+      </musicList>
     </div>
   </transition>
 </template>
@@ -9,6 +10,7 @@
   import {mapGetters} from 'vuex'
   import {getSingerDateil} from 'api/recommend';
   import {formatterSong} from 'common/js/song';
+  import musicList from 'src/base/musicList/musicList';
   export default{
     data(){
       return{
@@ -30,7 +32,7 @@
         }
         getSingerDateil(id).then((res) => {
           this.song = this.normalizeSong(res.data.list);
-          console.log(this.song);
+          console.log(this.singer);
         })
       },
       normalizeSong(songList){
@@ -43,18 +45,13 @@
         });
         return arr;
       }
+    },
+    components:{
+      musicList
     }
   }
 </script>
 <style lang='stylus'>
-  .singerDetail
-    position:fixed
-    top:0
-    bottom:0
-    left:0
-    right 0
-    z-index:999
-    background :red
   .slider-enter-active, .slider-leave-active
     transition: all .5s;
   .slider-enter, .slider-leave-to 
