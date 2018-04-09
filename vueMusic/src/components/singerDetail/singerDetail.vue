@@ -1,7 +1,7 @@
 <template>
   <transition name='slider'>
     <div class="singerDetail">
-      <musicList :avater='singer.avater' :title='singer.name' :songList='song'>
+      <musicList :avater='singer.avater' :title='singer.name' :songList='song' v-if='song.length'>
       </musicList>
     </div>
   </transition>
@@ -32,7 +32,6 @@
         }
         getSingerDateil(id).then((res) => {
           this.song = this.normalizeSong(res.data.list);
-          console.log(this.singer);
         })
       },
       normalizeSong(songList){

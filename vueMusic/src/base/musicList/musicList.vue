@@ -1,17 +1,20 @@
 <template>
   <div class="musicList">
-    <div class="info-box" :style='bgimage'>
+    <div class="info-box" :style='bgimage' ref='bgimage'>
       <div class="text">
         <i class="icon-right" @click='$router.back()'></i>
         <span>{{ title }}</span>
       </div>
     </div>
+    <div class="layer" ref='layer'></div>
     <div class="song-box">
-      
+      <songList :songList='songList' @scroll='scroll'>
+      </songList>
     </div>
   </div>
 </template>
 <script>
+  import songList from 'src/base/songList/songList';
   export default {
     props:{
       title:{
@@ -34,6 +37,20 @@
       bgimage(){
         return `background-image:url(${this.avater});background-repeat:no-repeat;background-size:cover`
       }
+    },
+    mounted(){
+      this.bgimageHeight = this.$refs.bgimage.clientHeight;
+    },
+    components:{
+      songList
+    },
+    methods:{
+      scroll(pos){
+        console.log(this.bgimageHeight);
+        let scrollMaxHeight = Math.max(-this.bgimageHeight, pos.y);
+        console.log(pos.y);
+        this.$refs.layer.style[`transform`] = `translate3d(0,${scrollMaxHeight}px,0)`;
+      }
     }
   }
 </script>
@@ -46,6 +63,14 @@
   right 0
   z-index:100
   background:#fff
+  .song-box
+    position:fixed
+    top:274px
+    bottom:0px
+  .layer
+    background:#fff
+    height:100%
+    position: relative;
   .info-box
     height:274px;
     width: 100%

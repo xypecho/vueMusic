@@ -63,7 +63,7 @@ export function getSingerDateil(id){
 		singermid: id,
 		order: 'listen',
 		begin: 0,
-		num: 30,
+		num: 50,
 		songstatus: 1
 	}
 	return jsonp(url,param,options);
