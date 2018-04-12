@@ -50,9 +50,9 @@
     }
   }
 </script>
-<style lang='stylus'>
+<style lang='stylus' scoped>
   .slider-enter-active, .slider-leave-active
-    transition: all .5s;
+    transition: all 0.5s;
   .slider-enter, .slider-leave-to 
     transform: translate3d(100%,0,0)
 </style>

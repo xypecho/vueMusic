@@ -14,7 +14,7 @@
     }
   }
 </script>
-<style lang='stylus'>
+<style lang='stylus' scoped>
   .loading
     text-align center
     img

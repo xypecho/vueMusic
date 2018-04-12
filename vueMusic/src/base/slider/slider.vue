@@ -75,7 +75,7 @@
     }
   }
 </script>
-<style lang='stylus'>
+<style lang='stylus' scoped>
     .slider
       min-height: 1px
       .slider-group

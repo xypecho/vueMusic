@@ -55,7 +55,7 @@
     }
   };
 </script>
-<style lang='stylus'>
+<style lang='stylus' scoped>
 .songList
   .wrapper
     height:600px
