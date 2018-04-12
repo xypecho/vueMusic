@@ -13,7 +13,7 @@
     </div>
     <div class="layer" ref='layer'></div>
     <div class="song-box">
-      <songList :songList='songList' @scroll='scroll'>
+      <songList :songList='songList' @scroll='scroll' @select='selectItem'>
       </songList>
     </div>
   </div>
@@ -21,6 +21,7 @@
 </template>
 <script>
   import songList from 'src/base/songList/songList';
+  import {mapActions} from 'vuex';
   export default {
     props:{
       title:{
@@ -54,6 +55,13 @@
       rollback() {
         this.$router.back();
       },
+      selectItem(item, index) {
+        console.log(item, index);
+        this.selectPlay({
+          list:this.songList,
+          index
+        });
+      },
       scroll(pos){
         console.log(this.bgimageHeight);
         let scrollMaxHeight = Math.max(-this.bgimageHeight + 40, pos.y);
@@ -75,7 +83,10 @@
         this.$refs.bgimage.style.zIndex = zIndex;
         this.$refs.bgimage.style[`transform`] = `scale(${scale})`;
         this.$refs.bgimage.style[`-webkit-transform`] = `scale(${scale})`;
-      }
+      },
+      ...mapActions([
+          'selectPlay'
+        ])
     }
   }
 </script>

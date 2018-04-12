@@ -2,7 +2,7 @@
   <div class="songList">
     <div class="wrapper" ref='wrapper'>
       <ul>
-        <li v-for='item in songList'>
+        <li v-for='(item, index) in songList' @click='select(item, index)'>
           <div class="rank" style="display: none"></div>
           <div class="content">
             <div class="nam">{{ item.name }}</div>
@@ -51,6 +51,9 @@
     methods:{
       formatterSong(song){
         return `${song.name}-${song.album}`;
+      },
+      select(item, index) {
+        this.$emit('select', item, index);
       }
     }
   };
