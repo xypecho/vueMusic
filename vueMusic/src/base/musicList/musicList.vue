@@ -38,7 +38,7 @@
       }
     },
     created(){
-      console.log(this.songList);
+      // console.log(this.songList);
     },
     computed:{
       bgimage(){
@@ -56,7 +56,7 @@
         this.$router.back();
       },
       selectItem(item, index) {
-        console.log(item, index);
+        // console.log(item, index);
         this.selectPlay({
           list:this.songList,
           index

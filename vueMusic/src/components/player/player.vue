@@ -1,24 +1,121 @@
 <template>
   <div class="player" v-show='playList.length > 0'>
+    <transition name='normal-player'>
     <div class="normal-player" v-show='fullScreen'>
-      <p>{{ playList.name }}</p>
+      <div class="background">
+        <img :src="currentSong.image" width="100%" height="100%">
+      </div>
+      <div class="top">
+        <i class="icon-right" @click='close'></i>
+        <p v-html='currentSong.name' class="songName"></p>
+        <p v-html='currentSong.singer' class="songSinger"></p>
+      </div>
+      <div class="middle">
+        <div :class="['middle-img',imgcircle]">
+          <img :src="currentSong.image">
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="icon">
+          <i class="icon-loop"></i>
+          <i class="icon-backward" @click='prev'></i>
+          <i :class="playIcon" @click='toggleSong'></i>
+          <i class="icon-forward2" @click='next'></i>
+          <i class="icon-heart"></i>
+        </div>
+      </div>
     </div>
-    <div class="mini-player" v-show='!fullScreen'>
-      
+    </transition>
+    <transition name='mini-player'>
+    <div class="mini-player" v-show='!fullScreen' @click='open'>
+      <div :class="['img', imgcircle]">
+        <img :src="currentSong.image" width="40" height="40">
+      </div>
+      <div class="songInfo">
+        <span v-html='currentSong.name'></span>
+        <span v-html='currentSong.singer'></span>
+      </div>
+      <div class="control" @click.stop='toggleSong'>
+        <i :class="playIcon"></i>
+      </div>
+      <div class="icon">
+        <i class="icon-list2"></i>
+      </div>
     </div>
+    </transition>
+    <audio ref='audio' :src='currentSong.url'></audio>
   </div>
 </template>
 <script>
-  import {mapGetters} from 'vuex';
+  import {mapGetters,mapMutations} from 'vuex';
   export default{
     computed:{
+      playIcon() {
+        return !this.playing ? 'icon-play2' : 'icon-pause';
+      },
+      imgcircle() {
+        return this.playing ? 'play' : 'pause';
+      },
       ...mapGetters([
         'fullScreen',
-        'playList'
+        'playList',
+        'currentSong',
+        'playing',
+        'currentIndex'
         ])
     },
-    created() {
-      console.log(this.playList);
+    methods:{
+      close() {
+        this.changeFullScreen(false);
+      },
+      open() {
+        this.changeFullScreen(true);
+      },
+      toggleSong() {
+        this.changePlayingState(!this.playing);
+      },
+      prev() {
+        let index = this.currentIndex - 1;
+        console.log(index);
+        if (index === -1) {
+          index = this.playList.length - 1;
+        }
+        this.SET_CURRENTINDEX(index);
+        if (!this.playing) {
+          this.toggleSong();
+        }
+      },
+      next() {
+        let index = this.currentIndex + 1;
+        console.log(index);
+        if (index === this.playList.length) {
+          index = 0;
+        }
+        this.SET_CURRENTINDEX(index);
+        if (!this.playing) {
+          this.toggleSong();
+        }
+      },
+      ...mapMutations({
+        changeFullScreen:'SET_FULLSCREEN',
+        changePlayingState:'SET_PLAYING',
+        SET_CURRENTINDEX:'SET_CURRENTINDEX'
+      })
+    },
+    mounted() {
+      console.log(this.$store.getters.currentSong);
+    },
+    watch: {
+      currentSong() {
+        this.$nextTick(() => {
+          this.$refs.audio.play();
+        });
+      },
+      playing() {
+        this.$nextTick(() => {
+          this.playing ? this.$refs.audio.play() : this.$refs.audio.pause();
+        });
+      }
     }
   };
 </script>
@@ -32,6 +129,114 @@
       right:0
       width:100%
       height:100%
-      background: red
       z-index:100
+      background:#222
+      .background
+        width:100%
+        height:100%
+        position absolute
+        left 0px
+        right 0px
+        top:0
+        bottom 0px
+        z-index:-1
+        opacity:0.6
+        filter:blur(20px)
+      .top
+        position:relative
+        margin-top:10px
+        i
+          position:absolute
+          top:0
+          left :10px
+          color:#31c27c
+          font-size:27px
+          transform:rotate(90deg)
+        p
+          width:100%
+          text-align center
+          color:#31c27c
+        .songName
+          font-size:18px
+        .songSinger
+          font-size:14px
+      .middle
+        width:100%
+        text-align center
+        .middle-img
+          border-radius:50%
+          width:300px;
+          height: 300px
+          margin 0 auto
+          overflow hidden
+          border :10px solid rgba(255,255,255,0.1)
+          &.play
+            animation: rotate 20s linear infinite
+          &.pause
+            animation-play-state:paused
+      .bottom
+        position: absolute;
+        bottom: 50px;
+        width: 100%;
+        .icon
+          display:flex
+          align-items: center
+          i
+            flex:1
+            text-align center
+            font-size:30px
+            color:#31c27c
+    .mini-player
+      display: flex;
+      align-items: center;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 180;
+      width: 100%;
+      height: 60px;
+      background:#31c27c;
+      color:#fff;
+      .img
+        flex: 0 0 40px
+        border-radius:50%
+        overflow hidden
+        margin-left:20px
+        &.play
+          animation: rotate 20s linear infinite
+        &.pause
+          animation-play-state:paused
+      .songInfo
+        flex:1
+        display:flex
+        flex-direction: column;
+        justify-content: center;
+        margin-left:20px
+        span
+          display:block
+          line-height: 20px
+      .control
+        flex:0 0 40px
+        font-size:30px
+      .icon
+        flex:0 0 40px
+        font-size:25px
+  // .mini-player-enter-active,.mini-player-leave-active
+    
+  // .mini-player-enter,.mini-player-leave-to
+  .normal-player-enter-active, .normal-player-leave-active
+    transition: all .5s;
+    .top,.bottom
+      transition: all .5s cubic-bezier(0.86,0.18,0.82,1.32)
+  .normal-player-enter, .normal-player-leave-to
+    opacity: 0;
+    .top
+      transform: translate3d(0,-100px,0)
+    .bottom
+      transform: translate3d(0,100px,0)
+  @keyframes rotate
+    0%
+      transform: rotate(0)
+    100%
+      transform: rotate(360deg)
 </style>
