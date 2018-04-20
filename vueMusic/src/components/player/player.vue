@@ -15,6 +15,10 @@
           <img :src="currentSong.image">
         </div>
       </div>
+      <div class="progress-wrapper">
+        <span style="color:red;padding: 20px">{{formateUpdateTime(currentTime)}}</span>
+        <span style="color:red;padding: 20px">{{formateUpdateTime(totalTime)}}</span>
+      </div>
       <div class="bottom">
         <div class="icon">
           <i class="icon-loop"></i>
@@ -43,12 +47,19 @@
       </div>
     </div>
     </transition>
-    <audio ref='audio' :src='currentSong.url'></audio>
+    <audio ref='audio' :src='currentSong.url' @play='ready' @timeupdate='updateTime'></audio>
   </div>
 </template>
 <script>
   import {mapGetters,mapMutations} from 'vuex';
   export default{
+    data() {
+      return {
+        songReady: false,
+        currentTime: 0,
+        totalTime: 0
+      };
+    },
     computed:{
       playIcon() {
         return !this.playing ? 'icon-play2' : 'icon-pause';
@@ -75,8 +86,10 @@
         this.changePlayingState(!this.playing);
       },
       prev() {
+        if (!this.songReady) {
+          return;
+        }
         let index = this.currentIndex - 1;
-        console.log(index);
         if (index === -1) {
           index = this.playList.length - 1;
         }
@@ -86,8 +99,10 @@
         }
       },
       next() {
+        if (!this.songReady) {
+          return;
+        }
         let index = this.currentIndex + 1;
-        console.log(index);
         if (index === this.playList.length) {
           index = 0;
         }
@@ -96,14 +111,34 @@
           this.toggleSong();
         }
       },
+      ready() {
+        this.songReady = true;
+      },
+      updateTime(e) {
+        this.currentTime = e.target.currentTime;
+        this.totalTime = e.target.duration;
+        console.log(e);
+      },
+      formateUpdateTime(time) {
+        time = Math.floor(time);
+        const minutes = Math.floor(time / 60);
+        const seconds = this.pad(Math.floor(time % 60));
+        return `${minutes}:${seconds}`;
+      },
+      pad(num, n = 2) {
+        //数字前面补0
+        let len = num.toString().length;
+        if (len < n) {
+          num = '0' + num;
+          len ++ ;
+        }
+        return num;
+      },
       ...mapMutations({
         changeFullScreen:'SET_FULLSCREEN',
         changePlayingState:'SET_PLAYING',
         SET_CURRENTINDEX:'SET_CURRENTINDEX'
       })
-    },
-    mounted() {
-      console.log(this.$store.getters.currentSong);
     },
     watch: {
       currentSong() {
