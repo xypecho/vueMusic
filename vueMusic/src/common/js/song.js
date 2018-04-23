@@ -20,7 +20,7 @@ export function formatterSong(data){
     album :data.albumname,
     duration :data.interval,
     image :`https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.albummid}.jpg?max_age=2592000`,
-    url:`http://ws.stream.qqmusic.qq.com/C100${data.songmid}.m4a?fromtag=38`
+    url:`http://dl.stream.qqmusic.qq.com/C400${data.songmid}.m4a?vkey=87A45A439867CBBD8345BE04C970599CF499C11635198219CE48A072174890C6AB33135D52F0F070CB1D6199B629FEAC10E8809DAD7EBBF7&guid=3655047200&fromtag=66`
   })
 }
 

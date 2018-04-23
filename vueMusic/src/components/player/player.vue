@@ -1,5 +1,5 @@
 <template>
-  <div class="player" v-show='playList.length > 0'>
+  <div class="player" v-if='playList.length > 0'>
     <transition name='normal-player'>
     <div class="normal-player" v-show='fullScreen'>
       <div class="background">
@@ -16,8 +16,9 @@
         </div>
       </div>
       <div class="progress-wrapper">
-        <span style="color:red;padding: 20px">{{formateUpdateTime(currentTime)}}</span>
-        <span style="color:red;padding: 20px">{{formateUpdateTime(totalTime)}}</span>
+        <span class="progress-text">{{formateUpdateTime(currentTime)}}</span>
+        <progressBar :percent='percent'></progressBar>
+        <span class="progress-text">{{formateUpdateTime(totalTime)}}</span>
       </div>
       <div class="bottom">
         <div class="icon">
@@ -25,7 +26,7 @@
           <i class="icon-backward" @click='prev'></i>
           <i :class="playIcon" @click='toggleSong'></i>
           <i class="icon-forward2" @click='next'></i>
-          <i class="icon-heart"></i>
+          <i class="icon-喜欢"></i>
         </div>
       </div>
     </div>
@@ -52,7 +53,11 @@
 </template>
 <script>
   import {mapGetters,mapMutations} from 'vuex';
+  import progressBar from 'src/base/progressBar/progressBar';
   export default{
+    components: {
+      progressBar
+    },
     data() {
       return {
         songReady: false,
@@ -66,6 +71,9 @@
       },
       imgcircle() {
         return this.playing ? 'play' : 'pause';
+      },
+      percent() {
+        return this.currentTime / this.currentSong.duration;
       },
       ...mapGetters([
         'fullScreen',
@@ -209,6 +217,17 @@
             animation: rotate 20s linear infinite
           &.pause
             animation-play-state:paused
+      .progress-wrapper
+        display:flex;
+        align-items:center;
+        padding: 0 30px;
+        padding-top: 120px;
+        .progress-text
+          color:#fff;
+          flex: 0 0 30px;
+          display: inline-block;
+          height:30px;
+          line-height: 30px;
       .bottom
         position: absolute;
         bottom: 50px;
