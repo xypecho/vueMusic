@@ -2,7 +2,7 @@
   <div class="progressBar">
     <div class="bar-wrapper">
       <div class="progress" ref='progress'></div>
-      <div class="btn-wrapper">
+      <div class="btn-wrapper" ref='progressbtn'>
         <div class="btn"></div>
       </div>
     </div>
@@ -18,8 +18,9 @@
     },
     watch: {
       percent(data) {
-        console.log(data);
+        console.log(data * 100);
         this.$refs.progress.style.width = `${data * 100}%`;
+        this.$refs.progressbtn.style['transform'] = `translate3d(${data * 100}%, 0 ,0)`;
       }
     }
   };
@@ -45,17 +46,19 @@
       .btn-wrapper
         position:absolute;
         left: -8px;
-        top: -13px;
+        top: -8px;
         width: 30px;
         height: 30px;
+        width: 100%;
         .btn
-          position: relative;
-          top: 7px;
-          left: 70px;
+          // position: relative;
+          // top: 7px;
+          // left: 70px;
           box-sizing: border-box;
           width: 16px;
           height: 16px;
           border: 3px solid #fff;
           border-radius: 50%;
           background: #31c27c;
+          transform:translate3d(0%, 0 ,0);
 </style>

@@ -63,7 +63,6 @@ function getSongVKey(songMid) {
 
 function getSongURL(songMid){
   return getSongVKey(songMid).then((data) => {
-    console.log(data);
     return `http://dl.stream.qqmusic.qq.com/C400${songMid}.m4a?vkey=${data.data.items[0].vkey}&guid=3655047200&fromtag=66`;
   });
 }
