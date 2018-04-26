@@ -31,6 +31,7 @@
           this.$router.push('/singer');
         }
         getSingerDateil(id).then((res) => {
+          // console.log(res);
           if (res.data) {
             this.song = this.normalizeSong(res.data.list);
           }
@@ -41,7 +42,10 @@
         songList.forEach((item) => {
           let {musicData} = item;
           if (musicData.albumid && musicData.songid) {
-            arr.push(formatterSong(musicData));
+            formatterSong(musicData).then((res) => {
+              arr.push(res);
+            });
+            // arr.push(formatterSong(musicData));
           }
         });
         return arr;

@@ -16,12 +16,10 @@
         type: Number
       }
     },
-    created() {
-      console.log(this.percent);
-    },
     watch: {
       percent(data) {
-        this.$refs.progress.style.width = `${data}px`;
+        console.log(data);
+        this.$refs.progress.style.width = `${data * 100}%`;
       }
     }
   };
@@ -41,6 +39,7 @@
       background: rgba(0,0,0,.3);
       top:14px;
       .progress
+        width:0%;
         height:3px;
         background:#31c27c;
       .btn-wrapper

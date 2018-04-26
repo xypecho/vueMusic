@@ -73,6 +73,8 @@
         return this.playing ? 'play' : 'pause';
       },
       percent() {
+        console.log(this.currentTime);
+        console.log(this.currentSong.duration);
         return this.currentTime / this.currentSong.duration;
       },
       ...mapGetters([

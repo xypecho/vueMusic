@@ -68,3 +68,5 @@ export function getSingerDateil(id){
 	}
 	return jsonp(url,param,options);
 }
+
+

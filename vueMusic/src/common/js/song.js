@@ -1,5 +1,6 @@
+import jsonp from 'common/js/jsonp';
 export default class Song{
-	constructor({ id, mid, singer, name, album, duration, image, url }){
+  constructor({ id, mid, singer, name, album, duration, image, url }){
     this.id =id;
     this.mid =mid;
     this.singer =singer;
@@ -11,7 +12,7 @@ export default class Song{
   }
 }
 
-export function formatterSong(data){
+export async function formatterSong(data){
   return new Song({
     id :data.songid,
     mid :data.songmid,
@@ -20,7 +21,7 @@ export function formatterSong(data){
     album :data.albumname,
     duration :data.interval,
     image :`https://y.gtimg.cn/music/photo_new/T002R300x300M000${data.albummid}.jpg?max_age=2592000`,
-    url:`http://dl.stream.qqmusic.qq.com/C400${data.songmid}.m4a?vkey=87A45A439867CBBD8345BE04C970599CF499C11635198219CE48A072174890C6AB33135D52F0F070CB1D6199B629FEAC10E8809DAD7EBBF7&guid=3655047200&fromtag=66`
+    url:await getSongURL(data.songmid)
   })
 }
 
@@ -34,4 +35,35 @@ function formatterSinger(singer){
     })
     return arr.join('/');
   }
+}
+
+function getSongVKey(songMid) {
+  const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg';
+  const data = {
+    format: "jsonp",
+    inCharset: "utf-8",
+    outCharset: "utf-8",
+    notice: 0,
+    g_tk: 1278911659,
+    hostUin: 0,
+    platform: "yqq",
+    needNewCode: 0,
+    cid: 205361747,
+    uin: 0,
+    songmid: songMid,
+    filename: `C400${songMid}.m4a`,
+    guid: 3655047200
+  };
+  const option = {
+    param: "callback",
+    prefix: "callback"
+  };
+  return jsonp(url, data, option);
+}
+
+function getSongURL(songMid){
+  return getSongVKey(songMid).then((data) => {
+    console.log(data);
+    return `http://dl.stream.qqmusic.qq.com/C400${songMid}.m4a?vkey=${data.data.items[0].vkey}&guid=3655047200&fromtag=66`;
+  });
 }
