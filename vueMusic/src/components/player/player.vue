@@ -17,7 +17,7 @@
       </div>
       <div class="progress-wrapper">
         <span class="progress-text">{{formateUpdateTime(currentTime)}}</span>
-        <progressBar :percent='percent'></progressBar>
+        <progressBar :percent='percent' @percentChange='percentChange'></progressBar>
         <span class="progress-text">{{formateUpdateTime(totalTime)}}</span>
       </div>
       <div class="bottom">
@@ -73,8 +73,8 @@
         return this.playing ? 'play' : 'pause';
       },
       percent() {
-        console.log(this.currentTime);
-        console.log(this.currentSong.duration);
+        // console.log(this.currentTime);
+        // console.log(this.currentSong.duration);
         return this.currentTime / this.currentSong.duration;
       },
       ...mapGetters([
@@ -86,6 +86,14 @@
         ])
     },
     methods:{
+      percentChange(percent) {
+        //改变歌曲进度
+        // console.log(percent);
+        this.$refs.audio.currentTime = percent * this.currentSong.duration;
+        if (!this.playing) {
+          this.toggleSong();
+        }
+      },
       close() {
         this.changeFullScreen(false);
       },
@@ -127,7 +135,7 @@
       updateTime(e) {
         this.currentTime = e.target.currentTime;
         this.totalTime = e.target.duration;
-        console.log(e);
+        // console.log(e);
       },
       formateUpdateTime(time) {
         time = Math.floor(time);
