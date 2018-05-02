@@ -25,7 +25,7 @@
     },
     methods: {
       progresstouchstart(e) {
-        this.touch.initiated = true; //鏉ュ垽鏂槸鍚︽嫋鍔ㄧ粨鏉熺殑鏍囧織
+        this.touch.initiated = true; //来判断是否拖动结束的标志
         this.touch.startX = e.touches[0].pageX;
         this.touch.left = this.$refs.progress.clientWidth;
       },
@@ -44,11 +44,13 @@
         this.$emit('percentChange', percent);
       },
       progressclick(e) {
-        //鐐瑰嚮鏉ユ敼鍙樿繘搴︽潯
+        //点击来改变进度条
         this.$refs.progress.style.width = `${e.offsetX}px`;
         this.$refs.progressbtn.style['transform'] = `translate3d(${e.offsetX}px, 0 ,0)`;
         const percent = e.offsetX / this.$refs.progressbtn.clientWidth;
         this.$emit('percentChange', percent);
+        console.warn(e);
+        console.error(percent);
       }
     },
     watch: {

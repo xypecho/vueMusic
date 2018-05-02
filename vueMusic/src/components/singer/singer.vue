@@ -50,7 +50,11 @@
     },
     mounted() {
       this.$nextTick(() => {
-        this.scroll = new betterScroll(this.$refs.wrapper, {});
+        const param = {
+          taps: true,
+          click: true
+        };
+        this.scroll = new betterScroll(this.$refs.wrapper, param);
       });
     },
     created(){

@@ -37,7 +37,9 @@
           this.scroll.refresh();
         } else {
           this.scroll = new betterScroll(this.$refs.wrapper, {
-            probeType: 3
+            probeType: 3,
+            click: true,
+            taps: true
           });
         }
         this.scroll.on('scroll',(pos) => {

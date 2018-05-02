@@ -174,6 +174,7 @@
 </script>
 <style lang='stylus' scoped>
   .player
+    position:relative;
     .normal-player
       position: fixed
       top:0
@@ -245,8 +246,17 @@
         .icon
           display:flex
           align-items: center
+          display:-webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+          display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+          display: -ms-flexbox;      /* TWEENER - IE 10 */
+          display: -webkit-flex;  
           i
-            flex:1
+            flex:1;
+            -webkit-box-flex: 1;      /* OLD - iOS 6-, Safari 3.1-6 */
+            -moz-box-flex: 1;         /* OLD - Firefox 19- */
+            width: 20%;               /* For old syntax, otherwise collapses. */
+            -webkit-flex: 1;          /* Chrome */
+            -ms-flex: 1;              /* IE 10 */
             text-align center
             font-size:30px
             color:#31c27c
