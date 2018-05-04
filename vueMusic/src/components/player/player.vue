@@ -22,7 +22,7 @@
       </div>
       <div class="bottom">
         <div class="icon">
-          <i class="icon-loop"></i>
+          <i :class="modeICON" @click='changeMode'></i>
           <i class="icon-backward" @click='prev'></i>
           <i :class="playIcon" @click='toggleSong'></i>
           <i class="icon-forward2" @click='next'></i>
@@ -41,7 +41,9 @@
         <span v-html='currentSong.singer'></span>
       </div>
       <div class="control" @click.stop='toggleSong'>
-        <i :class="playIcon"></i>
+<!--         <progressCircle> -->
+          <i :class="playIcon"></i>
+<!--         </progressCircle> -->
       </div>
       <div class="icon">
         <i class="icon-list2"></i>
@@ -54,8 +56,11 @@
 <script>
   import {mapGetters,mapMutations} from 'vuex';
   import progressBar from 'src/base/progressBar/progressBar';
+  import {playMode} from 'common/js/config.js';
+  // import progressCircle from 'src/base/progressCircle/progressCircle';
   export default{
     components: {
+      // progressCircle
       progressBar
     },
     data() {
@@ -69,12 +74,13 @@
       playIcon() {
         return !this.playing ? 'icon-play2' : 'icon-pause';
       },
+      modeICON() {
+        return this.mode === playMode.sequence ? 'icon-singleLoop' : (this.mode === playMode.loop ? 'icon-loop' : 'icon-shuffle');
+      },
       imgcircle() {
         return this.playing ? 'play' : 'pause';
       },
       percent() {
-        // console.log(this.currentTime);
-        // console.log(this.currentSong.duration);
         return this.currentTime / this.currentSong.duration;
       },
       ...mapGetters([
@@ -82,7 +88,9 @@
         'playList',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
         ])
     },
     methods:{
@@ -152,10 +160,19 @@
         }
         return num;
       },
+      changeMode() {
+        const mode = (this.mode + 1) % 3;
+        this.CHANGE_MODE(mode);
+        if (mode === playMode.random) {
+          this.sequenceList.sort(() => 0.5 - Math.random());
+        }
+        console.log(this.sequenceList);
+      },
       ...mapMutations({
         changeFullScreen:'SET_FULLSCREEN',
         changePlayingState:'SET_PLAYING',
-        SET_CURRENTINDEX:'SET_CURRENTINDEX'
+        SET_CURRENTINDEX:'SET_CURRENTINDEX',
+        CHANGE_MODE:'SET_MODE'
       })
     },
     watch: {

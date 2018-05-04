@@ -7,6 +7,7 @@ import VueLazyload from 'vue-lazyload'
 import store from './store'
 import './common/stylus/index.styl'
 import './common/extra_stylus/style.styl'
+import './common/other_stylus/style.styl'
 
 
 Vue.use(VueLazyload, {
