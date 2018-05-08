@@ -6,9 +6,9 @@
         <i class="icon-right" @click='rollback'></i>
         <span>{{ title }}</span>
       </div>
-      <div class="playbtn">
+      <div class="playbtn" @click='shufflePlay'>
         <span class="icon-music"></span>
-        <span>Random play all</span>
+        <span>随机播放全部</span>
       </div>
     </div>
     <div class="layer" ref='layer'></div>
@@ -22,6 +22,7 @@
 <script>
   import songList from 'src/base/songList/songList';
   import {mapActions} from 'vuex';
+  import {getLyrics} from 'src/api/lyrics';
   export default {
     props:{
       title:{
@@ -56,18 +57,21 @@
         this.$router.back();
       },
       selectItem(item, index) {
-        // console.log(item, index);
+        console.log(item);
+        getLyrics(item.mid).then((res) => {
+          console.log(res);
+        });
+        return false;
         this.selectPlay({
           list:this.songList,
           index
         });
       },
       scroll(pos){
-        console.log(this.bgimageHeight);
         let scrollMaxHeight = Math.max(-this.bgimageHeight + 40, pos.y);
         console.log(pos.y);
-        let zIndex = 0; // ����ͼ�Ĳ㼶z-index
-        let scale = 1;//����ͼ�ķŴ�
+        let zIndex = 0; // 背景图的层级z-index
+        let scale = 1;//背景图的放大
         this.$refs.layer.style[`transform`] = `translate3d(0,${scrollMaxHeight}px,0)`;
         this.$refs.layer.style[`-webkit-transform`] = `translate3d(0,${scrollMaxHeight}px,0)`;
         const percent = Math.abs(pos.y / this.bgimageHeight);
@@ -84,8 +88,14 @@
         this.$refs.bgimage.style[`transform`] = `scale(${scale})`;
         this.$refs.bgimage.style[`-webkit-transform`] = `scale(${scale})`;
       },
+      shufflePlay() {
+        this.randomPlay({
+          list:this.songList
+        });
+      },
       ...mapActions([
-          'selectPlay'
+          'selectPlay',
+          'randomPlay'
         ])
     }
   }

@@ -13,8 +13,13 @@ const portfinder = require('portfinder')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
-// var app = express();
-// var apiRoutes = express.Router();
+var express = require('express')
+var axios = require('axios')
+var app = express();
+var apiRoutes = express.Router();
+app.use('/api', apiRoutes)
+
+
 
 
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -26,6 +31,28 @@ const devWebpackConfig = merge(baseWebpackConfig, {
 
   // these devServer options should be customized in /config/index.js
   devServer: {
+    before(app){
+      app.get('/api/lyric', function(req, res) {
+        var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg';
+        axios.get(url, {
+          headers:{
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          let res = response.data;
+          if (typeof(res) === 'string') {
+            let reg = res.indexOf('(');
+            console.log(reg);
+            return reg;
+          }
+          // res.json(res)
+        }).catch((e) => {
+          console.log(e);
+        });
+      })
+    },
     clientLogLevel: 'warning',
     historyApiFallback: {
       rewrites: [

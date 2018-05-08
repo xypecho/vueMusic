@@ -8,6 +8,7 @@ import store from './store'
 import './common/stylus/index.styl'
 import './common/extra_stylus/style.styl'
 import './common/other_stylus/style.styl'
+import axios from 'axios';
 
 
 Vue.use(VueLazyload, {

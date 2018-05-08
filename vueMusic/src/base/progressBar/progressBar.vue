@@ -45,17 +45,15 @@
       },
       progressclick(e) {
         //点击来改变进度条
+        const warp_padding = this.$refs.progressbtn.getBoundingClientRect().left;
         this.$refs.progress.style.width = `${e.offsetX}px`;
         this.$refs.progressbtn.style['transform'] = `translate3d(${e.offsetX}px, 0 ,0)`;
         const percent = e.offsetX / this.$refs.progressbtn.clientWidth;
         this.$emit('percentChange', percent);
-        console.warn(e);
-        console.error(percent);
       }
     },
     watch: {
       percent(data) {
-        console.log(data * 100);
         if (data >=0 && !this.touch.initiated) {
           this.$refs.progress.style.width = `${data * 100}%`;
           this.$refs.progressbtn.style['transform'] = `translate3d(${data * 100}%, 0 ,0)`;

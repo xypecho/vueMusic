@@ -50,13 +50,14 @@
       </div>
     </div>
     </transition>
-    <audio ref='audio' :src='currentSong.url' @play='ready' @timeupdate='updateTime'></audio>
+    <audio ref='audio' :src='currentSong.url' @play='ready' @timeupdate='updateTime' @ended='endCallBack'></audio>
   </div>
 </template>
 <script>
   import {mapGetters,mapMutations} from 'vuex';
   import progressBar from 'src/base/progressBar/progressBar';
   import {playMode} from 'common/js/config.js';
+  import {shuffle} from 'common/js/tool.js';
   // import progressCircle from 'src/base/progressCircle/progressCircle';
   export default{
     components: {
@@ -75,7 +76,7 @@
         return !this.playing ? 'icon-play2' : 'icon-pause';
       },
       modeICON() {
-        return this.mode === playMode.sequence ? 'icon-singleLoop' : (this.mode === playMode.loop ? 'icon-loop' : 'icon-shuffle');
+        return this.mode === playMode.sequence ? 'icon-loop' : (this.mode === playMode.loop ? 'icon-singleLoop' : 'icon-shuffle');
       },
       imgcircle() {
         return this.playing ? 'play' : 'pause';
@@ -137,6 +138,10 @@
           this.toggleSong();
         }
       },
+      loop() {
+        this.$refs.audio.currentTime = 0;
+        this.$refs.audio.play();
+      },
       ready() {
         this.songReady = true;
       },
@@ -144,6 +149,13 @@
         this.currentTime = e.target.currentTime;
         this.totalTime = e.target.duration;
         // console.log(e);
+      },
+      endCallBack() {
+        if (this.mode === playMode.loop) {
+          this.loop();
+        } else {
+          this.next();
+        }
       },
       formateUpdateTime(time) {
         time = Math.floor(time);
@@ -163,20 +175,36 @@
       changeMode() {
         const mode = (this.mode + 1) % 3;
         this.CHANGE_MODE(mode);
+        let list = null;
         if (mode === playMode.random) {
-          this.sequenceList.sort(() => 0.5 - Math.random());
+          list = shuffle(this.sequenceList);
+        } else {
+          list = this.sequenceList;
         }
-        console.log(this.sequenceList);
+        console.log(mode);
+        this.CHANGE_LIST(list);
+        this.resetCurrentSong(list);
+      },
+      resetCurrentSong(list) {
+        let index = list.findIndex((item) => item.id === this.currentSong.id);
+        this.SET_CURRENTINDEX(index);
       },
       ...mapMutations({
         changeFullScreen:'SET_FULLSCREEN',
         changePlayingState:'SET_PLAYING',
         SET_CURRENTINDEX:'SET_CURRENTINDEX',
-        CHANGE_MODE:'SET_MODE'
+        CHANGE_MODE:'SET_MODE',
+        CHANGE_LIST:'SET_SEQUENCELIST'
       })
     },
     watch: {
-      currentSong() {
+      currentSong(newSong, oldSong) {
+        if (!newSong.id) {
+          return
+        }
+        if (newSong.id === oldSong.id) {
+          return
+        }
         this.$nextTick(() => {
           this.$refs.audio.play();
         });
