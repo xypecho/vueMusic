@@ -17,7 +17,6 @@ export function getLyrics(mid) {
   return axios.get(url, {
     params:param
   }).then((res) => {
-    console.log(res);
   return Promise.resolve(res.data);
 })
 }

@@ -97,7 +97,6 @@
     methods:{
       percentChange(percent) {
         //改变歌曲进度
-        // console.log(percent);
         this.$refs.audio.currentTime = percent * this.currentSong.duration;
         if (!this.playing) {
           this.toggleSong();
@@ -199,13 +198,14 @@
     },
     watch: {
       currentSong(newSong, oldSong) {
-        if (!newSong.id) {
-          return
-        }
-        if (newSong.id === oldSong.id) {
-          return
-        }
+        this.currentSong.receiveLyric();
         this.$nextTick(() => {
+          if (!newSong.id) {
+            return
+          }
+          if (newSong.id === oldSong.id) {
+            return
+          }
           this.$refs.audio.play();
         });
       },

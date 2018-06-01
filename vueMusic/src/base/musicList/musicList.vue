@@ -22,7 +22,6 @@
 <script>
   import songList from 'src/base/songList/songList';
   import {mapActions} from 'vuex';
-  import {getLyrics} from 'src/api/lyrics';
   export default {
     props:{
       title:{
@@ -58,10 +57,6 @@
       },
       selectItem(item, index) {
         console.log(item);
-        getLyrics(item.mid).then((res) => {
-          console.log(res);
-        });
-        return false;
         this.selectPlay({
           list:this.songList,
           index

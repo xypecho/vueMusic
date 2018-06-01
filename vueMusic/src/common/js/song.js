@@ -1,6 +1,8 @@
 import jsonp from 'common/js/jsonp';
+import {getLyrics} from 'src/api/lyrics';
+import {Base64} from 'js-base64';
 export default class Song{
-  constructor({ id, mid, singer, name, album, duration, image, url }){
+  constructor({ id, mid, singer, name, album, duration, image, url, lyric }){
     this.id =id;
     this.mid =mid;
     this.singer =singer;
@@ -9,6 +11,12 @@ export default class Song{
     this.duration =duration;
     this.image =image;
     this.url =url;
+  }
+
+  receiveLyric(){
+    getLyrics(this.mid).then((res) => {
+      this.lyric = Base64.decode(res.lyric);
+    });
   }
 }
 
@@ -24,6 +32,7 @@ export async function formatterSong(data){
     url:await getSongURL(data.songmid)
   })
 }
+
 
 function formatterSinger(singer){
   if (!singer) {
